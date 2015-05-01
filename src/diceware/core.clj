@@ -35,7 +35,7 @@
      (partition 5)
      (take n)
      (map (partial die-rolls->word (wordlist)))
-     (interpose" ")
+     (interpose " ")
      (apply str)))
 
 (defn -main
