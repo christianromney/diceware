@@ -25,7 +25,7 @@
      (die-rolls rng)))
   
   ([rng]
-   (lazy-seq (cons (inc (.nextInt rng 5))
+   (lazy-seq (cons (inc (.nextInt rng 6))
                    (die-rolls rng)))))
 
 (defn passphrase
