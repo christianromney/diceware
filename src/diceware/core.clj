@@ -7,8 +7,7 @@
   "Returns a future whose value will be a map 
   of die rolls to words"
   []
-  (future
-    (-> "wordlist.edn" io/resource slurp read-string)))
+  (-> "wordlist.edn" io/resource slurp read-string))
 
 (defn- die-rolls->word
   "Converts a sequence of 5 die rolls into a Diceware word"
@@ -34,7 +33,7 @@
   (->> (die-rolls)
      (partition 5)
      (take n)
-     (map (partial die-rolls->word (wordlist)))
+     (map (partial die-rolls->word (future-call wordlist)))
      (interpose " ")
      (apply str)))
 
