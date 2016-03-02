@@ -15,31 +15,36 @@
   (let [k (apply str rolls)]
     (get @word-list k)))
 
-(defn- die-rolls
+(defn- infinite-die-rolls
   "Returns a lazy sequence of random die rolls"
   ([]
    (let [now (.toEpochMilli (java.time.Instant/now))
          rng (SecureRandom/getInstance "SHA1PRNG")]
      (.setSeed rng now)
-     (die-rolls rng)))
+     (infinite-die-rolls rng)))
   
   ([rng]
    (lazy-seq (cons (inc (.nextInt rng 6))
-                   (die-rolls rng)))))
+                   (infinite-die-rolls rng)))))
 
-(defn passphrase
+(defn generate-passphrase
   "Generates a passphrase of n words"
   [n]
-  (->> (die-rolls)
-     (partition 5)
-     (take n)
-     (map (partial die-rolls->word (future-call wordlist)))
-     (interpose " ")
-     (apply str)))
+  (->> (inifinite-die-rolls)
+       (partition 5)
+       (take n)
+       (map (partial die-rolls->word (future-call wordlist)))
+       (interpose " ")
+       (apply str)))
+
+(defn requested-phrase-length
+  "Return the number of requested words in the phrase"
+  [args]
+  (Integer/parseInt (first args)))
 
 (defn -main
   "Prints a diceware passphrase"
   [& args]
-  (let [num-words (Integer/parseInt (first args))]
-    (println (passphrase num-words))
+  (let [num-words (requested-phrase-length args)]
+    (println (generate-passphrase num-words))
     (shutdown-agents)))
