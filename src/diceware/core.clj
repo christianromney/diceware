@@ -4,7 +4,7 @@
   (:import [java.security SecureRandom])
   (:gen-class))
 
-(def diceware-words
+(def diceware-file
   "The filename of the Diceware word list in EDN format"
   "wordlist.edn")
 
@@ -50,6 +50,6 @@
 (defn -main
   "Prints a diceware passphrase"
   [& args]
-  (let [word-list (load-wordlist diceware-words)
+  (let [word-list (load-wordlist diceware-file)
         num-words (requested-phrase-length args)]
     (println (generate-passphrase word-list num-words))))
